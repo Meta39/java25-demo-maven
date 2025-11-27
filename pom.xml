@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.fu</groupId>
+    <artifactId>java25-demo-maven</artifactId>
+    <version>1</version>
+    <packaging>pom</packaging>
+
+    <!-- 子模块 -->
+    <modules>
+        <module>spring-boot-demo</module>
+    </modules>
+
+    <!-- properties 定义的变量名可以在执行 mvn 时使用 -D变量名=变量值 进行修改，如：mvn -Dmy.property=newValue -->
+    <properties>
+        <java.version>25</java.version>
+        <!-- maven.compiler.source 和 maven.compiler.target 这2个参数需要引入 apache maven-compiler-plugin 插件 -->
+        <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
+        <native-build-tools-plugin.version>0.11.3</native-build-tools-plugin.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <spring-boot-dependencies.version>4.0.0</spring-boot-dependencies.version>
+        <org.mapstruct.version>1.6.3</org.mapstruct.version>
+        <!-- Lombok 尽量跟 Spring Boot 的版本一致 -->
+        <lombok.version>1.18.42</lombok.version>
+        <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+        <caffeine.version>3.2.3</caffeine.version>
+        <druid-spring-boot-starter.version>1.2.27</druid-spring-boot-starter.version>
+        <!-- mybatis-plus自3.5.13开始支持Spring Boot4 -->
+        <mybatis-plus.version>3.5.14</mybatis-plus.version>
+        <xxl-job-core.version>3.2.0</xxl-job-core.version>
+        <redisson-spring-boot-starter.version>3.52.0</redisson-spring-boot-starter.version>
+        <rocketmq-spring-boot-starter.version>2.3.4</rocketmq-spring-boot-starter.version>
+    </properties>
+
+    <!-- 必要依赖 -->
+    <dependencies>
+
+    </dependencies>
+
+    <!-- 非必要依赖，子项目可选 -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- 如果这里填写了 spring-boot-dependencies 里包含的依赖，则会以当前配置的为准 -->
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${org.mapstruct.version}</version>
+            </dependency>
+            <!-- lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+            <!-- druid 数据库连接池 （Spring Boot）-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid-spring-boot-starter.version}</version>
+            </dependency>
+            <!-- MyBatis-Plus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-bom</artifactId>
+                <version>${mybatis-plus.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- xxl-job -->
+            <dependency>
+                <groupId>com.xuxueli</groupId>
+                <artifactId>xxl-job-core</artifactId>
+                <version>${xxl-job-core.version}</version>
+            </dependency>
+            <!--使用redisson作为分布式锁替换掉自定义分布式锁-->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson-spring-boot-starter.version}</version>
+            </dependency>
+            <!-- RocketMQ -->
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>${rocketmq-spring-boot-starter.version}</version>
+            </dependency>
+            <!-- caffeine 本地缓存 -->
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
+            </dependency>
+            <!-- Spring Boot 【放到最后面，因为前面定义了版本的话，就会覆盖Spring Boot自带的版本号】-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot-dependencies.version}</version>
+                <configuration>
+                    <!-- 打包导入设置了 systemPath 的jar包 -->
+                    <includeSystemScope>true</includeSystemScope>
+                    <!-- 打包时排除依赖【如果子项目也引用了maven-compiler-plugin，则以子项目的配置为准】 -->
+                    <excludes>
+                        <!--不打包lombok，因为lombok只在编译时使用，编译后就没用了-->
+                        <exclude>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </exclude>
+                        <!--spring官方排除的依赖项-->
+                        <exclude>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configuration-processor</artifactId>
+                        </exclude>
+                        <!-- 排除 test -->
+                        <exclude>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-starter-test</artifactId>
+                        </exclude>
+                        <!-- 排除 log4j -->
+                        <exclude>
+                            <groupId>org.apache.logging.log4j</groupId>
+                            <artifactId>log4j-api</artifactId>
+                        </exclude>
+                        <exclude>
+                            <groupId>org.apache.logging.log4j</groupId>
+                            <artifactId>log4j-to-slf4j</artifactId>
+                        </exclude>
+                    </excludes>
+                </configuration>
+                <!-- 解决打包没有把依赖Jar包打入springboot的jar包的问题 -->
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <!--
+                打包需要的静态资源文件
+                打包全部静态资源文件，启动jar包通过命令行参数控制
+                如：java -Xms256m -Xmx512m -Dlogging.config=./logback-spring.xml -jar app.jar - -spring.profiles.active=dev
+             -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <!-- 解决yml配置@spring.profiles.active@时编译后没有生成对应环境的问题 -->
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+
+</project>
