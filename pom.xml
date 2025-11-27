@@ -17,6 +17,11 @@
     <!-- properties 定义的变量名可以在执行 mvn 时使用 -D变量名=变量值 进行修改，如：mvn -Dmy.property=newValue -->
     <properties>
         <java.version>25</java.version>
+        <!-- IDEA 打开 Project Structure => Project Settings => Project => SDK 【GraalVM 21.0.6 - VM 23.1.6】（其中：21.0.6是JAVA_VERSION，23.1.6是GRAALVM_VERSION） -->
+        <!-- 【GraalVM JDK 版本】就是 GraalVM 根目录下的 release 文件里的 JAVA_VERSION 值。注意：JAVA21 不代表 GraalVM也是21。 -->
+        <JAVA_VERSION>25.0.1</JAVA_VERSION>
+        <!-- 【GraalVM 版本】就是 GraalVM 根目录下的 release 文件里的 GRAALVM_VERSION 值。注意：JAVA21 不代表 GraalVM也是21。 -->
+        <GRAALVM_VERSION>25.0.1</GRAALVM_VERSION>
         <!-- maven.compiler.source 和 maven.compiler.target 这2个参数需要引入 apache maven-compiler-plugin 插件 -->
         <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
         <native-build-tools-plugin.version>0.11.3</native-build-tools-plugin.version>

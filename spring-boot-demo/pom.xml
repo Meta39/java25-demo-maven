@@ -51,6 +51,16 @@
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
                 <version>${native-build-tools-plugin.version}</version>
+                <configuration>
+                    <!-- 快速构建【CPU和内存疯涨，这时候电脑会卡顿】或者将 GRAALVM_QUICK_BUILD 环境变量设置为 true -->
+                    <quickBuild>true</quickBuild>
+                    <skipNativeTests>true</skipNativeTests>
+                    <debug>false</debug>
+                    <verbose>false</verbose>
+                    <buildArgs combine.children="append">
+                        <buildArg>--enable-url-protocols=http</buildArg>
+                    </buildArgs>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
