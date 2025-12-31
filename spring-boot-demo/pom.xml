@@ -37,7 +37,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <annotationProcessorPaths>
                         <path>
@@ -50,7 +49,6 @@
             <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
-                <version>${native-build-tools-plugin.version}</version>
                 <configuration>
                     <!-- 快速构建【CPU和内存疯涨，这时候电脑会卡顿】或者将 GRAALVM_QUICK_BUILD 环境变量设置为 true -->
                     <quickBuild>true</quickBuild>
@@ -65,7 +63,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot-dependencies.version}</version>
                 <configuration>
                     <!-- 打包导入设置了 systemPath 的jar包 -->
                     <includeSystemScope>true</includeSystemScope>
