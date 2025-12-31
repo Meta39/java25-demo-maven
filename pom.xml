@@ -59,6 +59,13 @@
                 <artifactId>druid-spring-boot-3-starter</artifactId>
                 <version>${druid-spring-boot-starter.version}</version>
             </dependency>
+            <!-- mybaits 需要这个依赖才能打 native 包，而且要注意这个是 GraalVM 的版本，不是jdk的版本！！！【直接打开 GraalVM 的安装路径查看 release 文件里的 GRAALVM_VERSION】 -->
+            <dependency>
+                <groupId>org.graalvm.sdk</groupId>
+                <artifactId>graal-sdk</artifactId>
+                <version>${GRAALVM_VERSION}</version>
+                <scope>provided</scope>
+            </dependency>
             <!-- MyBatis-Plus -->
             <dependency>
                 <groupId>com.baomidou</groupId>
